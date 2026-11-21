@@ -1,0 +1,564 @@
+/* =====================================
+   DAILYMAZA - COMPLETE WEBSITE DESIGN
+===================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary: #2563eb;
+    --primary-dark: #172554;
+    --background: #f3f7ff;
+    --white: #ffffff;
+    --text: #172554;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --shadow: 0 8px 30px rgba(23, 37, 84, 0.08);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: var(--background);
+    color: var(--text);
+    line-height: 1.6;
+}
+
+button, input {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    transition: 0.25s ease;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.05);
+}
+
+[hidden] {
+    display: none !important;
+}
+
+/* HEADER */
+
+.main-header {
+    background: #101a3a;
+    color: white;
+    padding: 16px 6%;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 3px 15px #0002;
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    color: #60a5fa;
+    font-size: 27px;
+    font-weight: 800;
+}
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.header-actions button,
+#getStartedBtn,
+#viewTasksBtn,
+.start-task,
+#copyReferral,
+#authSubmit {
+    background: var(--primary);
+    color: white;
+    padding: 12px 22px;
+    border-radius: 9px;
+    font-weight: bold;
+}
+
+/* HERO */
+
+.hero {
+    background: linear-gradient(135deg, #172554, #1d4ed8, #2563eb);
+    color: white;
+    padding: 95px 20px;
+    text-align: center;
+}
+
+.hero-content {
+    max-width: 850px;
+    margin: auto;
+}
+
+.hero-tag,
+.small-heading {
+    display: block;
+    font-size: 12px;
+    letter-spacing: 2px;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.hero h1 {
+    font-size: clamp(32px, 5vw, 55px);
+    margin-bottom: 15px;
+}
+
+.hero p {
+    font-size: 18px;
+    margin-bottom: 28px;
+    color: #e0eaff;
+}
+
+#getStartedBtn {
+    background: white;
+    color: #1d4ed8;
+    padding: 14px 28px;
+}
+
+/* COMMON SECTIONS */
+
+section {
+    padding: 65px 6%;
+}
+
+.section-heading {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.section-heading h2 {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.section-heading p {
+    color: var(--muted);
+}
+
+.small-heading {
+    color: var(--primary);
+}
+
+/* DASHBOARD */
+
+.dashboard {
+    max-width: 1200px;
+    margin: auto;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.dashboard-card,
+.wallet-box,
+.task-card,
+.info-card {
+    background: var(--white);
+    border-radius: 17px;
+    padding: 25px;
+    box-shadow: var(--shadow);
+    border: 1px solid #edf1f8;
+}
+
+.dashboard-card {
+    text-align: center;
+}
+
+.card-icon {
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.dashboard-card h3 {
+    font-size: 16px;
+    color: var(--muted);
+}
+
+.dashboard-card h1 {
+    color: var(--primary);
+    margin: 8px 0;
+    font-size: 27px;
+}
+
+.dashboard-card p {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+#viewTasksBtn {
+    display: block;
+    margin: 25px auto 0;
+}
+
+/* WALLET */
+
+.wallet {
+    text-align: center;
+}
+
+.wallet-box {
+    max-width: 420px;
+    margin: auto;
+    padding: 35px;
+}
+
+.wallet-box h1 {
+    font-size: 35px;
+    color: var(--primary);
+    margin: 8px 0;
+}
+
+.wallet-box p {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+/* TASKS */
+
+.tasks {
+    max-width: 1400px;
+    margin: auto;
+}
+
+.task-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.task-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    transition: 0.25s ease;
+}
+
+.task-card:hover,
+.dashboard-card:hover,
+.info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px #17255415;
+}
+
+.task-icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+}
+
+.task-label {
+    background: #dbeafe;
+    color: #1d4ed8;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.task-card h3 {
+    font-size: 21px;
+    margin-bottom: 10px;
+}
+
+.task-card > p {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.task-reward {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px 0;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+}
+
+.task-reward strong {
+    color: #15803d;
+    font-size: 15px;
+}
+
+.start-task,
+#copyReferral {
+    width: 100%;
+    margin-top: 15px;
+}
+
+.start-task:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+    transform: none;
+}
+
+#referralLink {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-top: 15px;
+    font-size: 12px;
+}
+
+#referralMessage,
+#rewardSyncStatus {
+    color: #15803d;
+    font-size: 13px;
+    margin-top: 10px;
+}
+
+/* HOW IT WORKS */
+
+.info-section {
+    background: #eaf1ff;
+}
+
+.info-grid {
+    max-width: 1100px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.info-card span {
+    color: var(--primary);
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.info-card h3 {
+    margin: 12px 0;
+}
+
+.info-card p {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+/* AUTH MODAL */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(15, 23, 42, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+}
+
+.modal-content {
+    background: white;
+    width: 100%;
+    max-width: 430px;
+    padding: 32px;
+    border-radius: 18px;
+    position: relative;
+    box-shadow: 0 20px 60px #0004;
+}
+
+.modal-content h2 {
+    margin-bottom: 22px;
+    color: var(--primary-dark);
+}
+
+.close-btn {
+    position: absolute;
+    right: 17px;
+    top: 12px;
+    background: transparent;
+    color: #64748b;
+    font-size: 28px;
+}
+
+.modal-content label {
+    display: block;
+    margin: 12px 0 6px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.modal-content input {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    outline: none;
+}
+
+.modal-content input:focus {
+    border-color: var(--primary);
+}
+
+#authSubmit {
+    width: 100%;
+    margin-top: 22px;
+}
+
+#authMessage {
+    margin-top: 12px;
+    color: #dc2626;
+    font-size: 13px;
+}
+
+.auth-switch {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 14px;
+}
+
+#authSwitch {
+    background: transparent;
+    color: var(--primary);
+    font-weight: bold;
+}
+
+.demo-notice {
+    margin-top: 20px;
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+}
+
+/* FOOTER */
+
+footer {
+    background: #101a3a;
+    color: white;
+    text-align: center;
+    padding: 35px 15px;
+}
+
+footer h2 {
+    color: #60a5fa;
+    margin-bottom: 10px;
+}
+
+footer p {
+    color: #cbd5e1;
+    font-size: 13px;
+    margin: 5px 0;
+}
+
+/* ACTIVITY HISTORY - EXISTING STYLES */
+
+.task-history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding: 16px;
+    margin: 12px 0;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+}
+
+.task-history-item h3 {
+    margin: 0 0 6px;
+    color: #172554;
+}
+
+.task-history-item p {
+    margin: 4px 0;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.task-history-item strong {
+    display: block;
+    color: #2563eb;
+    text-align: right;
+    margin-bottom: 7px;
+}
+
+.task-history-item span {
+    display: inline-block;
+    color: #15803d;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+#historyStatus {
+    color: #64748b;
+}
+
+/* RESPONSIVE DESIGN */
+
+@media (max-width: 900px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .task-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .main-header {
+        padding: 13px 5%;
+    }
+
+    .logo {
+        font-size: 23px;
+    }
+
+    section {
+        padding: 45px 5%;
+    }
+
+    .hero {
+        padding: 70px 18px;
+    }
+
+    .hero p {
+        font-size: 15px;
+    }
+
+    .section-heading h2 {
+        font-size: 26px;
+    }
+
+    .dashboard-grid,
+    .task-grid,
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-card,
+    .task-card,
+    .info-card {
+        padding: 22px;
+    }
+
+    .modal-content {
+        padding: 27px 20px;
+    }
+}

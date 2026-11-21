@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DailyMaza Admin Panel</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f1f5f9;color:#172554}
+header{background:#172554;color:white;padding:22px;text-align:center}
+.container{max-width:1150px;margin:25px auto;padding:15px}
+.card{background:white;padding:22px;margin-bottom:18px;border-radius:14px;box-shadow:0 3px 12px #0001}
+h2{color:#2563eb}
+input,select{width:100%;padding:12px;margin:9px 0 16px;border:1px solid #cbd5e1;border-radius:8px}
+button{background:#2563eb;color:white;border:0;padding:11px 15px;border-radius:8px;cursor:pointer;margin:3px}
+button:disabled{opacity:.5}
+.secondary{background:#475569}.success{background:#16a34a}.danger{background:#dc2626}
+.hidden{display:none!important}
+.tabs{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px}
+.tab-btn{background:#64748b}.tab-btn.active{background:#2563eb}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.stat{background:#eff6ff;padding:16px;border-radius:10px}
+.stat h3{font-size:13px;color:#64748b;margin:0}
+.stat p{font-size:24px;font-weight:bold;margin:9px 0 0}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:650px}
+th,td{padding:11px;border-bottom:1px solid #e2e8f0;text-align:left;font-size:13px}
+th{background:#eff6ff;color:#1e40af}
+.small{font-size:11px;overflow-wrap:anywhere}
+.status{padding:5px 9px;border-radius:20px;font-size:12px;font-weight:bold}
+.pending{background:#fef3c7;color:#92400e}
+.approved{background:#dcfce7;color:#166534}
+.rejected{background:#fee2e2;color:#991b1b}
+.notice{background:#fff7ed;color:#9a3412;padding:12px;border-radius:8px;font-size:13px}
+.message{font-size:13px;font-weight:bold;overflow-wrap:anywhere}
+@media(max-width:600px){.container{margin:8px auto}.card{padding:15px}header{padding:15px}}
+</style>
+</head>
+<body>
+
+<header>
+<h1>DailyMaza Admin Panel</h1>
+<p>Demo Reward & User Management</p>
+</header>
+
+<div class="container">
+
+<section class="card" id="loginCard">
+<h2>Admin Login</h2>
+<form id="loginForm">
+<label>Admin Email</label>
+<input type="email" id="adminEmail" required>
+<label>Password</label>
+<input type="password" id="adminPassword" required>
+<button type="submit" id="loginBtn">Login</button>
+</form>
+<p id="loginMessage" class="message"></p>
+</section>
+
+<div id="adminDashboard" class="hidden">
+
+<section class="card">
+<h2>Dashboard Overview</h2>
+<p id="adminIdentity"></p>
+<div class="stats">
+<div class="stat"><h3>Total Users</h3><p id="totalUsers">0</p></div>
+<div class="stat"><h3>Total Referrals</h3><p id="totalReferrals">0</p></div>
+<div class="stat"><h3>Pending Referrals</h3><p id="pendingReferrals">0</p></div>
+<div class="stat"><h3>Approved Referrals</h3><p id="approvedReferrals">0</p></div>
+<div class="stat"><h3>Pending Withdrawals</h3><p id="pendingWithdrawals">0</p></div>
+</div>
+<button id="logoutBtn" class="secondary">Logout</button>
+</section>
+
+<nav class="tabs">
+<button class="tab-btn active" data-tab="settings">Reward Settings</button>
+<button class="tab-btn" data-tab="users">Users</button>
+<button class="tab-btn" data-tab="referrals">Referrals</button>
+<button class="tab-btn" data-tab="withdrawals">Withdrawals</button>
+</nav>
+
+<section id="settingsTab">
+<div class="card">
+<h2>Survey Task Reward</h2>
+<label>Reward (₹)</label>
+<input type="number" id="surveyReward" min="0" max="1000" step="0.01" value="5">
+</div>
+<div class="card">
+<h2>Video Task Reward</h2>
+<label>Reward (₹)</label>
+<input type="number" id="videoReward" min="0" max="1000" step="0.01" value="2">
+</div>
+<div class="card">
+<h2>Referral Reward</h2>
+<label>Reward (₹)</label>
+<input type="number" id="referralReward" min="0" max="1000" step="0.01" value="10">
+</div>
+<div class="card">
+<button id="saveBtn">Save Settings</button>
+<p id="message" class="message"></p>
+</div>
+</section>
+
+<section id="usersTab" class="hidden">
+<div class="card">
+<h2>Demo Balance Adjustment</h2>
+<p class="notice">यह केवल Demo Testing Balance है। इससे वास्तविक पैसा नहीं मिलता।</p>
+<label>Select User</label>
+<select id="balanceUser"><option value="">Select user</option></select>
+<label>Amount to Add (₹)</label>
+<input type="number" id="balanceAmount" min="1" max="10000" placeholder="Example: 50">
+<button id="addBalanceBtn" class="success">Add Demo Balance</button>
+<p id="balanceMessage" class="message"></p>
+</div>
+<div class="card">
+<h2>Registered Users</h2>
+<button id="refreshUsers" class="secondary">Refresh Users</button>
+<p id="usersMessage" class="message"></p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Name</th><th>Email</th><th>UID</th><th>Balance</th><th>Tasks</th><th>Referrals</th></tr></thead>
+<tbody id="usersTable"></tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section id="referralsTab" class="hidden">
+<div class="card">
+<h2>Referral Management</h2>
+<button id="refreshReferrals" class="secondary">Refresh Referrals</button>
+<p id="referralsMessage" class="message"></p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Inviter UID</th><th>New User UID</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
+<tbody id="referralsTable"></tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section id="withdrawalsTab" class="hidden">
+<div class="card">
+<h2>Withdrawal Management</h2>
+<p class="notice">यह Demo Approval है। कोई वास्तविक UPI Payment नहीं भेजा जाएगा।</p>
+<button id="refreshWithdrawals" class="secondary">Refresh Withdrawals</button>
+<p id="withdrawalsMessage" class="message"></p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>User ID</th><th>Amount</th><th>UPI ID</th><th>Status</th><th>Requested</th><th>Actions</th></tr></thead>
+<tbody id="withdrawalsTable"></tbody>
+</table>
+</div>
+</div>
+</section>
+
+</div>
+</div>
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import {getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import {getFirestore,doc,getDoc,getDocs,collection,setDoc,updateDoc,runTransaction,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+const firebaseConfig={
+apiKey:"AIzaSyDX-Xzc74FDstuTsi7goxPvOHa-9D8uqyk",
+authDomain:"dailymaza-313e9.firebaseapp.com",
+projectId:"dailymaza-313e9",
+storageBucket:"dailymaza-313e9.firebasestorage.app",
+messagingSenderId:"592031280830",
+appId:"1:592031280830:web:cd57023541bb9111a4f8ef",
+measurementId:"G-Y2FKDQREPT"
+};
+
+const ADMIN_EMAIL="shivamsawraj90977@gmail.com";
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+const $=id=>document.getElementById(id);
+const settingsRef=doc(db,"settings","tasks");
+
+function safe(value){
+return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+}
+function msg(id,text,color="red"){
+$(id).textContent=text;
+$(id).style.color=color;
+}
+function dateText(timestamp){
+return timestamp?.toDate?timestamp.toDate().toLocaleString("en-IN"):"N/A";
+}
+function setLoggedOut(){
+$("loginCard").classList.remove("hidden");
+$("adminDashboard").classList.add("hidden");
+}
+function setLoggedIn(user){
+$("loginCard").classList.add("hidden");
+$("adminDashboard").classList.remove("hidden");
+$("adminIdentity").textContent="Admin: "+user.email;
+}
+
+async function loadSettings(){
+msg("message","Loading settings...","green");
+try{
+const snap=await getDoc(settingsRef);
+const d=snap.exists()?snap.data():{};
+$("surveyReward").value=d.survey??5;
+$("videoReward").value=d.video??2;
+$("referralReward").value=d.referral??10;
+msg("message","Settings loaded.","green");
+}catch(e){msg("message",e.message);}
+}
+
+$("loginForm").addEventListener("submit",async e=>{
+e.preventDefault();
+const email=$("adminEmail").value.trim().toLowerCase();
+const password=$("adminPassword").value;
+if(email!==ADMIN_EMAIL){msg("loginMessage","This email is not authorized.");return;}
+$("loginBtn").disabled=true;
+msg("loginMessage","Signing in...","green");
+try{
+await signInWithEmailAndPassword(auth,email,password);
+msg("loginMessage","");
+}catch(e){msg("loginMessage","Login failed: "+e.message);}
+finally{$("loginBtn").disabled=false;}
+});
+
+$("saveBtn").addEventListener("click",async()=>{
+const user=auth.currentUser;
+if(!user||user.email!==ADMIN_EMAIL){msg("message","Admin authentication required.");return;}
+const settings={
+survey:Number($("surveyReward").value),
+video:Number($("videoReward").value),
+referral:Number($("referralReward").value)
+};
+if(Object.values(settings).some(v=>!Number.isFinite(v)||v<0||v>1000)){
+msg("message","Rewards must be between ₹0 and ₹1000.");return;
+}
+$("saveBtn").disabled=true;
+try{
+await setDoc(settingsRef,{...settings,updatedAt:serverTimestamp(),updatedBy:user.email});
+msg("message","Settings saved successfully!","green");
+}catch(e){msg("message","Save failed: "+e.message);}
+finally{$("saveBtn").disabled=false;}
+});
+
+async function loadUsers(){
+msg("usersMessage","Loading users...","green");
+$("usersTable").innerHTML="";
+try{
+const snap=await getDocs(collection(db,"users"));
+$("totalUsers").textContent=snap.size;
+const select=$("balanceUser");
+const old=select.value;
+select.innerHTML='<option value="">Select a user</option>';
+snap.forEach(s=>{
+const u=s.data();
+const option=document.createElement("option");
+option.value=s.id;
+option.textContent=(u.name||"User")+" — "+(u.email||s.id);
+select.appendChild(option);
+const tr=document.createElement("tr");
+tr.innerHTML=`<td>${safe(u.name||"User")}</td><td>${safe(u.email||"")}</td><td class="small">${safe(s.id)}</td><td>₹${Number(u.balance||0).toFixed(2)}</td><td>${Number(u.completedTasks||0)}</td><td>${Number(u.referrals||0)}</td>`;
+$("usersTable").appendChild(tr);
+});
+if(old)select.value=old;
+msg("usersMessage",snap.empty?"No users found.":"Users loaded.","green");
+}catch(e){msg("usersMessage","Users error: "+e.message);}
+}
+
+$("addBalanceBtn").addEventListener("click",async()=>{
+const admin=auth.currentUser;
+const uid=$("balanceUser").value;
+const amount=Number($("balanceAmount").value);
+if(!admin||admin.email!==ADMIN_EMAIL){msg("balanceMessage","Admin authentication required.");return;}
+if(!uid){msg("balanceMessage","Please select a user.");return;}
+if(!Number.isFinite(amount)||amount<=0||amount>10000){msg("balanceMessage","Enter an amount between ₹1 and ₹10,000.");return;}
+if(!confirm("Add ₹"+amount.toFixed(2)+" Demo Balance?"))return;
+$("addBalanceBtn").disabled=true;
+try{
+const userRef=doc(db,"users",uid);
+await runTransaction(db,async tx=>{
+const snap=await tx.get(userRef);
+if(!snap.exists())throw new Error("User not found.");
+tx.update(userRef,{balance:Number(snap.data().balance||0)+amount});
+});
+msg("balanceMessage","Demo balance added successfully.","green");
+$("balanceAmount").value="";
+await loadUsers();
+}catch(e){msg("balanceMessage","Update failed: "+e.message);}
+finally{$("addBalanceBtn").disabled=false;}
+});
+
+async function loadReferrals(){
+msg("referralsMessage","Loading referrals...","green");
+$("referralsTable").innerHTML="";
+try{
+const snap=await getDocs(collection(db,"referrals"));
+let pending=0,approved=0;
+$("totalReferrals").textContent=snap.size;
+snap.forEach(s=>{
+const r=s.data(),status=r.status||"pending";
+if(status==="pending")pending++;
+if(status==="approved")approved++;
+const actions=status==="pending"
+?`<button class="success approveBtn" data-id="${safe(s.id)}">Approve</button><button class="danger rejectBtn" data-id="${safe(s.id)}">Reject</button>`
+:"Processed";
+const tr=document.createElement("tr");
+tr.innerHTML=`<td class="small">${safe(r.inviterUid||"")}</td><td class="small">${safe(r.referredUid||s.id)}</td><td><span class="status ${safe(status)}">${safe(status)}</span></td><td>${safe(dateText(r.createdAt))}</td><td>${actions}</td>`;
+$("referralsTable").appendChild(tr);
+});
+$("pendingReferrals").textContent=pending;
+$("approvedReferrals").textContent=approved;
+msg("referralsMessage",snap.empty?"No referrals found.":"Referrals loaded.","green");
+document.querySelectorAll(".approveBtn").forEach(b=>b.addEventListener("click",()=>approveReferral(b.dataset.id)));
+document.querySelectorAll(".rejectBtn").forEach(b=>b.addEventListener("click",()=>rejectReferral(b.dataset.id)));
+}catch(e){msg("referralsMessage","Referral error: "+e.message);}
+}
+
+async function approveReferral(id){
+if(!confirm("Approve referral and add demo reward?"))return;
+const admin=auth.currentUser;
+if(!admin||admin.email!==ADMIN_EMAIL){alert("Admin authentication required.");return;}
+try{
+await runTransaction(db,async tx=>{
+const rr=doc(db,"referrals",id);
+const rs=await tx.get(rr);
+if(!rs.exists())throw new Error("Referral not found.");
+const r=rs.data();
+if(r.status!=="pending")throw new Error("Already processed.");
+const ur=doc(db,"users",r.inviterUid);
+const us=await tx.get(ur);
+if(!us.exists())throw new Error("Inviter not found.");
+const ss=await tx.get(settingsRef);
+const reward=ss.exists()?Number(ss.data().referral||0):0;
+tx.update(rr,{status:"approved",approvedAt:serverTimestamp(),approvedBy:admin.email,reward});
+tx.update(ur,{balance:Number(us.data().balance||0)+reward,referrals:Number(us.data().referrals||0)+1});
+});
+alert("Referral approved. Demo reward credited.");
+await loadReferrals();
+await loadUsers();
+}catch(e){alert("Approval failed: "+e.message);}
+}
+
+async function rejectReferral(id){
+if(!confirm("Reject this referral?"))return;
+try{
+await updateDoc(doc(db,"referrals",id),{status:"rejected",rejectedAt:serverTimestamp(),rejectedBy:auth.currentUser.email});
+alert("Referral rejected.");
+await loadReferrals();
+}catch(e){alert("Reject failed: "+e.message);}
+}
+
+async function loadWithdrawals(){
+msg("withdrawalsMessage","Loading withdrawals...","green");
+$("withdrawalsTable").innerHTML="";
+try{
+const snap=await getDocs(collection(db,"withdrawals"));
+let pending=0;
+snap.forEach(s=>{
+const w=s.data(),status=w.status||"pending";
+if(status==="pending")pending++;
+const actions=status==="pending"
+?`<button class="success withdrawalApproveBtn" data-id="${safe(s.id)}">Approve</button><button class="danger withdrawalRejectBtn" data-id="${safe(s.id)}">Reject</button>`
+:"Processed";
+const tr=document.createElement("tr");
+tr.innerHTML=`<td class="small">${safe(w.userId||"")}</td><td>₹${Number(w.amount||0).toFixed(2)}</td><td>${safe(w.upiId||"")}</td><td><span class="status ${safe(status)}">${safe(status)}</span></td><td>${safe(dateText(w.requestedAt))}</td><td>${actions}</td>`;
+$("withdrawalsTable").appendChild(tr);
+});
+$("pendingWithdrawals").textContent=pending;
+msg("withdrawalsMessage",snap.empty?"No withdrawal requests found.":"Withdrawals loaded.","green");
+document.querySelectorAll(".withdrawalApproveBtn").forEach(b=>b.addEventListener("click",()=>updateWithdrawal(b.dataset.id,"approved")));
+document.querySelectorAll(".withdrawalRejectBtn").forEach(b=>b.addEventListener("click",()=>updateWithdrawal(b.dataset.id,"rejected")));
+}catch(e){msg("withdrawalsMessage","Withdrawal error: "+e.message);}
+}
+
+async function updateWithdrawal(id,status){
+const admin=auth.currentUser;
+if(!admin||admin.email!==ADMIN_EMAIL){alert("Admin authentication required.");return;}
+if(!confirm((status==="approved"?"Approve":"Reject")+" this demo request? No actual payment will be sent."))return;
+try{
+const ref=doc(db,"withdrawals",id);
+await runTransaction(db,async tx=>{
+const snap=await tx.get(ref);
+if(!snap.exists())throw new Error("Request not found.");
+if(snap.data().status!=="pending")throw new Error("Already processed.");
+tx.update(ref,{status,reviewedAt:serverTimestamp(),reviewedBy:admin.email});
+});
+alert("Demo withdrawal status updated: "+status);
+await loadWithdrawals();
+}catch(e){alert("Update failed: "+e.message);}
+}
+
+document.querySelectorAll(".tab-btn").forEach(button=>{
+button.addEventListener("click",async()=>{
+document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+button.classList.add("active");
+const tab=button.dataset.tab;
+["settings","users","referrals","withdrawals"].forEach(name=>{
+$(name+"Tab").classList.toggle("hidden",name!==tab);
+});
+if(tab==="users")await loadUsers();
+if(tab==="referrals")await loadReferrals();
+if(tab==="withdrawals")await loadWithdrawals();
+});
+});
+
+$("refreshUsers").addEventListener("click",loadUsers);
+$("refreshReferrals").addEventListener("click",loadReferrals);
+$("refreshWithdrawals").addEventListener("click",loadWithdrawals);
+
+$("logoutBtn").addEventListener("click",async()=>{
+try{await signOut(auth);}catch(e){msg("message","Logout error: "+e.message);}
+});
+
+onAuthStateChanged(auth,async user=>{
+if(!user){setLoggedOut();return;}
+if((user.email||"").toLowerCase()!==ADMIN_EMAIL){
+await signOut(auth);
+setLoggedOut();
+alert("Access denied. Admin only.");
+return;
+}
+setLoggedIn(user);
+await loadSettings();
+});
+</script>
+</body>
+</html>

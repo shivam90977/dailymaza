@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#101a3a">
+    <meta name="description" content="DailyMaza - Online Demo Rewards">
+    <title>DailyMaza - Online Rewards</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="main-header">
+    <div class="header-container">
+        <h2 class="logo">DailyMaza</h2>
+        <div class="header-actions">
+            <button id="loginBtn" type="button">Login / Signup</button>
+            <button id="logoutBtn" type="button" hidden>Logout</button>
+        </div>
+    </div>
+</header>
+
+<main>
+
+<section class="hero">
+    <div class="hero-content">
+        <span class="hero-tag">WELCOME TO DAILYMAZA</span>
+        <h1>Earn, Learn &amp; Grow!</h1>
+        <p>छोटे-छोटे ऑनलाइन टास्क पूरे करो और डिजिटल स्किल्स सीखो।</p>
+        <button id="getStartedBtn" type="button">Get Started →</button>
+    </div>
+</section>
+
+<section id="userDashboard" class="dashboard" hidden>
+    <div class="section-heading">
+        <span class="small-heading">YOUR ACCOUNT</span>
+        <h2>My Dashboard</h2>
+        <p>Hello, <strong id="dashboardUserName">User</strong> 👋</p>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="dashboard-card wallet-card">
+            <div class="card-icon">💰</div>
+            <h3>My Wallet</h3>
+            <h1 id="dashboardWalletBalance">₹0.00</h1>
+            <p>Demo Balance Only</p>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="card-icon">✅</div>
+            <h3>Completed Tasks</h3>
+            <h1 id="dashboardCompletedTasks">0</h1>
+            <p>Your task progress</p>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="card-icon">🎯</div>
+            <h3>Available Tasks</h3>
+            <h1>3</h1>
+            <p>Demo activities</p>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="card-icon">👥</div>
+            <h3>Referrals</h3>
+            <h1 id="referralCount">0</h1>
+            <p>Successful referrals</p>
+        </div>
+    </div>
+
+    <button id="viewTasksBtn" type="button">Explore Tasks ↓</button>
+</section>
+
+<!-- WALLET -->
+<section class="wallet" id="wallet">
+    <div class="section-heading">
+        <span class="small-heading">YOUR EARNINGS</span>
+        <h2>My Wallet</h2>
+    </div>
+
+    <div class="wallet-box">
+        <div class="card-icon">💳</div>
+        <h1 id="walletBalance">₹0.00</h1>
+        <p>Demo Balance Only</p>
+        <p>No real money or withdrawal is available.</p>
+    </div>
+</section>
+
+<!-- WITHDRAWAL SECTION -->
+<section class="info-section" id="withdrawalSection">
+    <div class="section-heading">
+        <span class="small-heading">UPI WITHDRAWAL</span>
+        <h2>Request Withdrawal</h2>
+        <p>Minimum withdrawal amount: <strong>₹50</strong></p>
+    </div>
+
+    <div class="card">
+        <p>Available Demo Balance:
+            <strong id="withdrawAvailableBalance">₹0.00</strong>
+        </p>
+
+        <form id="withdrawalForm">
+            <label for="withdrawAmount">Withdrawal Amount (₹)</label>
+            <input
+                type="number"
+                id="withdrawAmount"
+                min="50"
+                step="1"
+                required
+                placeholder="Enter amount (Minimum ₹50)"
+            >
+
+            <label for="withdrawUpi">Your UPI ID</label>
+            <input
+                type="text"
+                id="withdrawUpi"
+                required
+                maxlength="100"
+                placeholder="example@upi"
+                autocomplete="off"
+            >
+
+            <button type="submit" id="withdrawSubmit">
+                Submit Withdrawal Request
+            </button>
+        </form>
+
+        <p id="withdrawalMessage" role="status" aria-live="polite"></p>
+
+        <p class="demo-notice">
+            Demo only: यह request रिकॉर्ड होगी। कोई वास्तविक UPI या बैंक पेमेंट नहीं होगा।
+            Request भेजने से wallet balance नहीं कटेगा।
+        </p>
+    </div>
+
+    <div class="section-heading" style="margin-top:30px;">
+        <h2>Withdrawal History</h2>
+    </div>
+
+    <div class="card">
+        <p id="withdrawalHistoryStatus" role="status">
+            Login to view withdrawal history.
+        </p>
+        <div id="withdrawalHistoryList"></div>
+    </div>
+</section>
+
+<!-- ACTIVITY HISTORY -->
+<section class="info-section" id="activityHistory">
+    <div class="section-heading">
+        <span class="small-heading">YOUR ACTIVITY</span>
+        <h2>Task Activity History</h2>
+        <p>आपके पूरे किए गए Demo Tasks की जानकारी।</p>
+    </div>
+
+    <div class="card">
+        <p id="historyStatus" role="status">Login to view your activity.</p>
+        <div id="historyList"></div>
+    </div>
+</section>
+
+<!-- TASKS -->
+<section class="tasks" id="tasks">
+    <div class="section-heading">
+        <span class="small-heading">START EARNING</span>
+        <h2>Available Tasks</h2>
+        <p>Complete demo activities and explore DailyMaza.</p>
+        <p id="rewardSyncStatus" role="status"></p>
+    </div>
+
+    <div class="task-grid">
+
+        <div class="task-card">
+            <div class="task-icon">📝</div>
+            <span class="task-label">DEMO TASK</span>
+            <h3>Survey Task</h3>
+            <p>Answer a simple question and complete a demo survey.</p>
+
+            <div class="task-reward">
+                <span>Demo Reward</span>
+                <strong id="surveyReward">₹5.00</strong>
+            </div>
+
+            <button class="start-task" data-task="survey" type="button">
+                Start Task →
+            </button>
+        </div>
+
+        <div class="task-card">
+            <div class="task-icon">🎬</div>
+            <span class="task-label">DEMO TASK</span>
+            <h3>Video Task</h3>
+            <p>Explore a demo video activity and learn how tasks work.</p>
+
+            <div class="task-reward">
+                <span>Demo Reward</span>
+                <strong id="videoReward">₹2.00</strong>
+            </div>
+
+            <button class="start-task" data-task="video" type="button">
+                Start Task →
+            </button>
+        </div>
+
+        <div class="task-card">
+            <div class="task-icon">🤝</div>
+            <span class="task-label">REFERRAL</span>
+            <h3>Invite Friends</h3>
+            <p>Share your referral link with your friends.</p>
+
+            <div class="task-reward">
+                <span>Successful Referrals</span>
+                <strong id="referralTaskCount">0</strong>
+            </div>
+
+            <div class="task-reward">
+                <span>Demo Referral Reward</span>
+                <strong id="referralReward">₹10.00</strong>
+            </div>
+
+            <input type="text" id="referralLink" readonly
+                placeholder="Login to get your referral link"
+                aria-label="Your referral link">
+
+            <button id="copyReferral" type="button">
+                Copy Referral Link
+            </button>
+
+            <p id="referralMessage" role="status"></p>
+        </div>
+
+    </div>
+</section>
+
+<section class="info-section">
+    <div class="section-heading">
+        <span class="small-heading">HOW IT WORKS</span>
+        <h2>Start in 3 Easy Steps</h2>
+    </div>
+
+    <div class="info-grid">
+        <div class="info-card">
+            <span>01</span>
+            <h3>Create Account</h3>
+            <p>Create your free DailyMaza account.</p>
+        </div>
+
+        <div class="info-card">
+            <span>02</span>
+            <h3>Explore Tasks</h3>
+            <p>Choose and explore available demo activities.</p>
+        </div>
+
+        <div class="info-card">
+            <span>03</span>
+            <h3>Track Progress</h3>
+            <p>View your demo dashboard and progress.</p>
+        </div>
+    </div>
+</section>
+
+</main>
+
+<!-- AUTH MODAL -->
+<div class="modal" id="authModal" hidden>
+    <div class="modal-content">
+
+        <button type="button" id="closeModal" class="close-btn">×</button>
+
+        <h2 id="authTitle">Login to DailyMaza</h2>
+
+        <form id="authForm">
+            <div id="nameGroup" hidden>
+                <label for="userName">Your Name</label>
+                <input type="text" id="userName"
+                    placeholder="Enter your name">
+            </div>
+
+            <label for="userEmail">Email Address</label>
+            <input type="email" id="userEmail"
+                required placeholder="Enter email">
+
+            <label for="userPassword">Password</label>
+            <input type="password" id="userPassword"
+                required minlength="6"
+                placeholder="Minimum 6 characters">
+
+            <button type="submit" id="authSubmit">Login</button>
+        </form>
+
+        <p id="authMessage" role="status" aria-live="polite"></p>
+
+        <p class="auth-switch">
+            <span id="switchLabel">Don't have an account?</span>
+            <button type="button" id="authSwitch">Sign Up</button>
+        </p>
+
+        <p class="demo-notice">
+            Demo only. No real payment or withdrawal is available.
+        </p>
+    </div>
+</div>
+
+<footer>
+    <h2>DailyMaza</h2>
+    <p>Learn new skills. Explore digital opportunities.</p>
+    <p>© 2026 DailyMaza. All Rights Reserved.</p>
+</footer>
+
+<script type="module" src="script.js"></script>
+</body>
+</html>
